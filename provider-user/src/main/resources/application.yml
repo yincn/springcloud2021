@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: provider-user
+  profiles:
+    active: dev
+  mvc:
+    servlet:
+      load-on-startup: 1
+
+server:
+  port: 8031
+  tomcat:
+    uri-encoding: UTF-8
+
+eureka:
+  environment: ${spring.profiles.active}
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+
+logging:
+  config: classpath:logback-boot.xml
+  file:
+    path: /Users/yinchuanning/project/logs/demo-springcloud2021/${spring.application.name}
+
+info:
+  app:
+    environment: ${spring.profiles.active}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  profiles: dev
+  redis:
+    host: localhost
+    port: 6379
+    #password: 123456
+
+eureka:
+  client:
+    service-url: 
+      defaultZone: http://localhost:8001/eureka/

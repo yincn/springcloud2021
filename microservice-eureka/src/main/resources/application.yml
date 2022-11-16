@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: eureka
+  profiles:
+    active: dev
+ 
+server:
+  port: 8001
+  tomcat:
+    uri-encoding: UTF-8
+
+eureka:
+  environment: ${spring.profiles.active}
+
+logging:
+  config: classpath:logback-boot.xml
+  file:
+    path: ${sys:user.home}/project/logs/demo-springcloud2021/${spring.application.name}
+
+info:
+  app:
+    environment: ${spring.profiles.active}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  profiles: dev
+
+eureka:
+  client: 
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+  instance:
+    instance-id: ${spring.application.name}-01
+
+---
+spring:
+  profiles: test
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url: 
+      defaultZone: http://127.0.0.1:8001/eureka/
+  instance:
+    instance-id: ${instanceId:${spring.application.name}-01}
+
+---
+spring:
+  profiles: prod
+ 
+eureka:
+  client: 
+    service-url: 
+      defaultZone: ${defaultZone}
+  instance:
+    instance-id: ${instanceId:${spring.application.name}-01}
